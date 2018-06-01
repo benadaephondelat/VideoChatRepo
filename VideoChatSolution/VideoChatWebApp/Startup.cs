@@ -3,8 +3,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using VideoChatWebApp.Data;
 
 namespace VideoChatWebApp
 {
@@ -21,6 +23,14 @@ namespace VideoChatWebApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            // Add EntityFramework support for SqlServer.
+            services.AddEntityFrameworkSqlServer();
+
+            // Add ApplicationDbContext.
+            services.AddDbContext<ApplicationDbContext>(options =>
+
+            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -65,6 +75,15 @@ namespace VideoChatWebApp
                     spa.UseAngularCliServer(npmScript: "start");
                 }
             });
+
+            using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                var dbContext = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
+
+                dbContext.Database.Migrate();
+
+                DbSeeder.Seed(dbContext);
+            }
         }
     }
 }
