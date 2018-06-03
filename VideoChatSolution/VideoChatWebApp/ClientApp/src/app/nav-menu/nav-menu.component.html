@@ -13,13 +13,18 @@
         <div class='navbar-collapse collapse' [ngClass]='{ "in": isExpanded }'>
           <ul class='nav navbar-nav'>
             <li [routerLinkActive]='["link-active"]' [routerLinkActiveOptions]='{ exact: true }'>
-              <a [routerLink]='["/"]' (click)='collapse()'>
+              <a [routerLink]='["/home"]' (click)='collapse()'>
                 <span class='glyphicon glyphicon-home'></span> Home
               </a>
             </li>
-            <li [routerLinkActive]="['link-active']">
+            <li *ngIf="!auth.isLoggedIn()" [routerLinkActive]="['link-active']">
               <a [routerLink]="['/login']">
                 <span class='glyphicon glyphicon-log-in'></span> Login
+              </a>
+            </li>
+            <li (click)="logout()" *ngIf="auth.isLoggedIn()" [routerLinkActive]="['link-active']">
+              <a>
+                <span class='glyphicon glyphicon-log-in'></span> Logout
               </a>
             </li>
           </ul>
