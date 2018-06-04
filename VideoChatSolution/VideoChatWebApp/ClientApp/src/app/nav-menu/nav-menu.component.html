@@ -22,9 +22,20 @@
                 <span class='glyphicon glyphicon-log-in'></span> Login
               </a>
             </li>
-            <li (click)="logout()" *ngIf="auth.isLoggedIn()" [routerLinkActive]="['link-active']">
+            <li *ngIf="auth.isLoggedIn()" (click)="logout()" [routerLinkActive]="['link-active']">
               <a>
                 <span class='glyphicon glyphicon-log-in'></span> Logout
+              </a>
+            </li>
+            <li *ngIf="auth.isLoggedIn()" [routerLinkActive]="['link-active']">
+              <a [routerLink]="['/users']">
+                <span class='glyphicon glyphicon-log-in'></span> Users
+              </a>
+            </li>
+            <li *ngIf="!auth.isLoggedIn()"
+                [routerLinkActive]="['link-active']">
+              <a [routerLink]="['/register']">
+                <span class='glyphicon glyphicon-log-in'></span> Register
               </a>
             </li>
           </ul>

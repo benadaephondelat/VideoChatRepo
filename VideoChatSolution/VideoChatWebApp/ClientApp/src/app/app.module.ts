@@ -10,13 +10,18 @@ import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { AuthService } from './services/auth.service';
 import { AuthInterceptor } from './services/auth.interceptor';
+import { AuthResponseInterceptor } from './services/auth.response.interceptor';
+import { UsersComponent } from './users/users.component';
+import { RegisterComponent } from './register/register.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavMenuComponent,
     HomeComponent,
-    LoginComponent
+    LoginComponent,
+    RegisterComponent,
+    UsersComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -27,6 +32,8 @@ import { AuthInterceptor } from './services/auth.interceptor';
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: 'home', component: HomeComponent },
       { path: 'login', component: LoginComponent },
+      { path: 'register', component: RegisterComponent },
+      { path: 'users', component: UsersComponent },
     ])
   ],
   providers: [
@@ -34,6 +41,11 @@ import { AuthInterceptor } from './services/auth.interceptor';
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthResponseInterceptor,
       multi: true
     }
 

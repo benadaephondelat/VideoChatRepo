@@ -1,5 +1,6 @@
 ﻿namespace VideoChatWebApp.Data
 {
+    using global::TestMakerFreeWebApp.Data;
     using Microsoft.AspNetCore.Identity;
     using System;
     using System.Linq;
@@ -40,7 +41,8 @@
                 UserName = "Admin",
                 Email = "admin@yahoo.com",
                 CreatedDate = createdDate,
-                LastModifiedDate = lastModifiedDate
+                LastModifiedDate = lastModifiedDate,
+             
             };
 
             if (await userManager.FindByNameAsync(user_Admin.UserName) == null)

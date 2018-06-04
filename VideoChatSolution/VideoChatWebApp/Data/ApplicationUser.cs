@@ -1,7 +1,10 @@
 ﻿namespace VideoChatWebApp.Data
 {
+    using global::TestMakerFreeWebApp.Data;
+
     using Microsoft.AspNetCore.Identity;
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
     namespace TestMakerFreeWebApp.Data
@@ -28,6 +31,8 @@
 
             [Required]
             public DateTime LastModifiedDate { get; set; }
+
+            public virtual List<Token> Tokens { get; set; }
         }
     }
 }
