@@ -10,10 +10,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
-using VideoChatWebApp.Data;
-using VideoChatWebApp.Data.TestMakerFreeWebApp.Data;
 using TestMakerFreeWebApp.ViewModels;
-using TestMakerFreeWebApp.Data;
+using DAL;
+using Models;
 
 namespace TestMakerFreeWebApp.Controllers
 {

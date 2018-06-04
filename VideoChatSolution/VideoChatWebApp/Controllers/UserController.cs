@@ -6,9 +6,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 
 using TestMakerFreeWebApp.ViewModels;
-using TestMakerFreeWebApp.Data;
-using VideoChatWebApp.Data;
-using VideoChatWebApp.Data.TestMakerFreeWebApp.Data;
+using DAL;
+using Models;
 
 namespace TestMakerFreeWebApp.Controllers
 {

@@ -34,6 +34,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Bootstrapper\Bootstrapper.csproj" />
+    <ProjectReference Include="..\DAL\DAL.csproj" />
+    <ProjectReference Include="..\Models\Models.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <TypeScriptCompile Include="ClientApp\src\app\services\token.response.ts" />
   </ItemGroup>
 

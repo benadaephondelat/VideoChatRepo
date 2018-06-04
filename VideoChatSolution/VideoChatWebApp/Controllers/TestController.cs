@@ -1,13 +1,12 @@
 ﻿namespace VideoChatWebApp.Controllers
 {
+    using DAL;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Configuration;
-
+    using Models;
     using TestMakerFreeWebApp.Controllers;
-    using VideoChatWebApp.Data;
-    using VideoChatWebApp.Data.TestMakerFreeWebApp.Data;
 
     public class TestController : BaseApiController
     {

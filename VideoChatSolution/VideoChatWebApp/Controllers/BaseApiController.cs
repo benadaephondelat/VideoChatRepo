@@ -1,13 +1,13 @@
 ﻿namespace TestMakerFreeWebApp.Controllers
 {
-    using VideoChatWebApp.Data;
-    using VideoChatWebApp.Data.TestMakerFreeWebApp.Data;
 
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.Extensions.Configuration;
 
     using Newtonsoft.Json;
+    using DAL;
+    using Models;
 
     [Route("api/[controller]")]
     public class BaseApiController : Controller
