@@ -15,4 +15,9 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="1.1.5" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\DAL.Interfaces\DAL.Interfaces.csproj" />
+    <ProjectReference Include="..\ServiceLayer.Interfaces\ServiceLayer.Interfaces.csproj" />
+  </ItemGroup>
+
 </Project>

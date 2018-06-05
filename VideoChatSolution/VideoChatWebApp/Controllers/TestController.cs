@@ -1,27 +1,27 @@
 ﻿namespace VideoChatWebApp.Controllers
 {
-    using DAL;
     using Microsoft.AspNetCore.Authorization;
-    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.Extensions.Configuration;
-    using Models;
-    using TestMakerFreeWebApp.Controllers;
 
-    public class TestController : BaseApiController
+    using ServiceLayer.Interfaces;
+    using System.Threading.Tasks;
+    
+    public class TestController : Controller
     {
-        private ApplicationDbContext context;
+        private ITokenService tokenService;
 
-        public TestController(ApplicationDbContext context, RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, IConfiguration configuration) : base(context, roleManager, userManager, configuration)
+        public TestController(ITokenService tokenService)
         {
-            this.context = context;
+            this.tokenService = tokenService;
         }
 
-        [HttpGet("Test")]
+        [Route("api/Test/Test")]
         [Authorize]
-        public IActionResult Test()
+        public async Task<IActionResult> Test()
         {
-            return Ok();
+            var allTokens = await this.tokenService.GetAllTokens();
+
+            return Ok(allTokens);
         }
     }
 }

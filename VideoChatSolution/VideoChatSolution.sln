@@ -9,9 +9,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DAL", "DAL\DAL.csproj", "{8
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models", "Models\Models.csproj", "{ACC9F692-DBF3-4BE8-AE89-5983836FD629}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bootstrapper", "Bootstrapper\Bootstrapper.csproj", "{75824A60-45BA-44F7-B911-3F2478D4EB9D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bootstrapper", "Bootstrapper\Bootstrapper.csproj", "{75824A60-45BA-44F7-B911-3F2478D4EB9D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceLayer", "ServiceLayer\ServiceLayer.csproj", "{205E6A6B-51E0-4C0D-A0B8-E85CC354A527}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServiceLayer", "ServiceLayer\ServiceLayer.csproj", "{205E6A6B-51E0-4C0D-A0B8-E85CC354A527}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAL.Interfaces", "DAL.Interfaces\DAL.Interfaces.csproj", "{2E08DC9E-B67F-4771-A177-BDCBE76D5E0A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceLayer.Interfaces", "ServiceLayer.Interfaces\ServiceLayer.Interfaces.csproj", "{F5055837-4555-43FE-ACEE-8FD4EC1236F3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +43,14 @@ Global
 		{205E6A6B-51E0-4C0D-A0B8-E85CC354A527}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{205E6A6B-51E0-4C0D-A0B8-E85CC354A527}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{205E6A6B-51E0-4C0D-A0B8-E85CC354A527}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E08DC9E-B67F-4771-A177-BDCBE76D5E0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E08DC9E-B67F-4771-A177-BDCBE76D5E0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E08DC9E-B67F-4771-A177-BDCBE76D5E0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E08DC9E-B67F-4771-A177-BDCBE76D5E0A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5055837-4555-43FE-ACEE-8FD4EC1236F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5055837-4555-43FE-ACEE-8FD4EC1236F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5055837-4555-43FE-ACEE-8FD4EC1236F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5055837-4555-43FE-ACEE-8FD4EC1236F3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

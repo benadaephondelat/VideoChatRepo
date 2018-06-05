@@ -8,63 +8,37 @@ using Microsoft.Extensions.Configuration;
 using TestMakerFreeWebApp.ViewModels;
 using DAL;
 using Models;
+using ServiceLayer.Interfaces;
+using Newtonsoft.Json;
 
 namespace TestMakerFreeWebApp.Controllers
 {
-    public class UserController : BaseApiController
+    public class UserController : Controller
     {
-        public UserController(ApplicationDbContext context, RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, IConfiguration configuration) : base(context, roleManager, userManager, configuration)
-        {
+        private IUserService userService;
 
+        public UserController(IUserService userService)
+        {
+            this.userService = userService;
         }
 
-        [HttpPost("Add")]
+        [Route("api/User/Add")]
+        [HttpPost()]
         public async Task<IActionResult> Add([FromBody]UserViewModel model)
         {
-            if (model == null)
-            {
-                return new StatusCodeResult(500);
-            }
+            //TODO CheckModelState
 
-            ApplicationUser user = await UserManager.FindByNameAsync(model.UserName);
-            if (user != null)
-            {
-                return BadRequest("Username already exists");
-            } 
-
-            user = await UserManager.FindByEmailAsync(model.Email);
-            if (user != null)
-            {
-                return BadRequest("Email already exists.");
-            }
-
-            var now = DateTime.Now;
-
-            user = new ApplicationUser()
-            {
-                SecurityStamp = Guid.NewGuid().ToString(),
-                UserName = model.UserName,
-                Email = model.Email,
-                DisplayName = model.DisplayName,
-                CreatedDate = now,
-                LastModifiedDate = now
-            };
-
-            await UserManager.CreateAsync(user, model.Password);
-
-            await UserManager.AddToRoleAsync(user, "RegisteredUser");
-
-            user.EmailConfirmed = true;
-            user.LockoutEnabled = false;
-
-            DbContext.SaveChanges();
+            var user = await this.userService.RegisterNewUser(model.UserName, model.DisplayName, model.Email, model.Password);
 
             UserViewModel viewModel = new UserViewModel();
             viewModel.DisplayName = user.DisplayName;
             viewModel.Email = user.Email;
             viewModel.UserName = user.Email;
 
-            return Json(viewModel, JsonSettings);
+            return Json(viewModel, new JsonSerializerSettings()
+            {
+                Formatting = Formatting.Indented
+            });
         }
     }
 }

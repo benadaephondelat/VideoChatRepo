@@ -35,8 +35,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Bootstrapper\Bootstrapper.csproj" />
-    <ProjectReference Include="..\DAL\DAL.csproj" />
     <ProjectReference Include="..\Models\Models.csproj" />
+    <ProjectReference Include="..\ServiceLayer.Interfaces\ServiceLayer.Interfaces.csproj" />
   </ItemGroup>
 
   <ItemGroup>

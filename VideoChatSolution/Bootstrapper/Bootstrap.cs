@@ -2,7 +2,10 @@
 {
     using System;
     using System.Text;
+
     using DAL;
+    using Models;
+
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -13,23 +16,23 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.IdentityModel.Tokens;
-    using Models;
+    using ServiceLayer.Interfaces;
+    using ServiceLayer;
+    using DAL.Interfaces;
 
     public static class Bootstrap
     {
         public static void ConfigureServicesBootstrapper(IServiceCollection services, IConfiguration configuration)
         {
-            var conf = configuration;
-
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            // Add EntityFramework support for SqlServer.
             services.AddEntityFrameworkSqlServer();
 
-            // Add ApplicationDbContext.
-            services.AddDbContext<ApplicationDbContext>(options =>
-
-            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<ApplicationDbContext>
+            (
+                options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")),
+                ServiceLifetime.Scoped
+            );
 
             services.AddIdentity<ApplicationUser, IdentityRole>(opts =>
             {
@@ -40,7 +43,11 @@
                 opts.Password.RequiredLength = 7;
             }).AddEntityFrameworkStores<ApplicationDbContext>();
 
-            // Add Authentication with JWT Tokens
+            services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
+            services.AddScoped<IAuthManager, AuthManager>();
+            services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IUserService, UserService>();
+
             services.AddAuthentication(opts =>
             {
                 opts.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;

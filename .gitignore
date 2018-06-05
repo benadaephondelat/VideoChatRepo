@@ -10,3 +10,7 @@ VideoChatSolution/Models/bin/
 VideoChatSolution/Bootstrapper/bin/
 VideoChatSolution/Bootstrapper/obj/
 VideoChatSolution/DAL/bin/
+VideoChatSolution/DAL.Interfaces/bin/
+VideoChatSolution/DAL.Interfaces/obj/
+VideoChatSolution/ServiceLayer.Interfaces/bin/
+VideoChatSolution/ServiceLayer.Interfaces/obj/

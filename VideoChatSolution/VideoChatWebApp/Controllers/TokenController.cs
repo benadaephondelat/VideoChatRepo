@@ -13,19 +13,26 @@ using Microsoft.IdentityModel.Tokens;
 using TestMakerFreeWebApp.ViewModels;
 using DAL;
 using Models;
+using ServiceLayer.Interfaces;
 
 namespace TestMakerFreeWebApp.Controllers
 {
-    public class TokenController : BaseApiController
+    [Route("api/Token")]
+    public class TokenController : Controller
     {
-        public TokenController(ApplicationDbContext context, RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, IConfiguration configuration) : base(context, roleManager, userManager, configuration)
+        private ITokenService tokenService;
+        private IConfiguration configuration;
+
+        public TokenController(ITokenService tokenService, IConfiguration configuration)
         {
+            this.tokenService = tokenService;
+            this.configuration = configuration;
         }
 
         [HttpPost("Auth")]
         public async Task<IActionResult> Auth([FromBody]TokenRequestViewModel model)
         {
-            if (model == null)
+            if (model == null) //TODO Replace with filter
             {
                 return new StatusCodeResult(500);
             }
@@ -46,25 +53,11 @@ namespace TestMakerFreeWebApp.Controllers
         {
             try
             {
-                var user = await UserManager.FindByNameAsync(model.username);
+                Token refreshToken = await this.tokenService.CreateUserRefreshToken(model.username, model.password, model.client_id);
 
-                if (user == null && model.username.Contains("@"))
-                {
-                    user = await UserManager.FindByEmailAsync(model.username);
-                }
+                TokenResponseViewModel tokenResponse = CreateAccessToken(refreshToken.UserId, refreshToken.Value);
 
-                if (user == null || !await UserManager.CheckPasswordAsync(user, model.password))
-                {
-                    return new UnauthorizedResult();
-                }
-
-                var rt = CreateRefreshToken(model.client_id, user.Id);
-
-                DbContext.Tokens.Add(rt);
-                DbContext.SaveChanges();
-
-                var t = CreateAccessToken(user.Id, rt.Value);
-                return Json(t);
+                return Json(tokenResponse);
             }
             catch (Exception)
             {
@@ -76,27 +69,9 @@ namespace TestMakerFreeWebApp.Controllers
         {
             try
             {
-                var rt = DbContext.Tokens.FirstOrDefault(t => t.ClientId == model.client_id && t.Value == model.refresh_token);
+                Token newRefreshToken = await this.tokenService.ReplaceUserRefreshToken(model.client_id, model.refresh_token);
 
-                if (rt == null)
-                {
-                    return new UnauthorizedResult();
-                }
-
-                var user = await UserManager.FindByIdAsync(rt.UserId);
-
-                if (user == null)
-                {
-                    return new UnauthorizedResult();
-                }
-
-                var rtNew = CreateRefreshToken(rt.ClientId, rt.UserId);
-
-                DbContext.Tokens.Remove(rt);
-                DbContext.Tokens.Add(rtNew);
-                DbContext.SaveChanges();
-
-                var response = CreateAccessToken(rtNew.UserId, rtNew.Value);
+                var response = CreateAccessToken(newRefreshToken.UserId, newRefreshToken.Value);
 
                 return Json(response);
             }
@@ -104,18 +79,6 @@ namespace TestMakerFreeWebApp.Controllers
             {
                 return new UnauthorizedResult();
             }
-        }
-
-        private Token CreateRefreshToken(string clientId, string userId)
-        {
-            return new Token()
-            {
-                ClientId = clientId,
-                UserId = userId,
-                Type = 0,
-                Value = Guid.NewGuid().ToString("N"),
-                CreatedDate = DateTime.UtcNow
-            };
         }
 
         private TokenResponseViewModel CreateAccessToken(string userId, string refreshToken)
@@ -129,13 +92,13 @@ namespace TestMakerFreeWebApp.Controllers
                 new Claim(JwtRegisteredClaimNames.Iat, new DateTimeOffset(now).ToUnixTimeSeconds().ToString())
             };
 
-            var tokenExpirationMins = Configuration.GetValue<int>("Auth:Jwt:TokenExpirationInMinutes");
-            var issuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Auth:Jwt:Key"]));
+            var tokenExpirationMins = this.configuration.GetValue<int>("Auth:Jwt:TokenExpirationInMinutes");
+            var issuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.configuration["Auth:Jwt:Key"]));
 
             var token = new JwtSecurityToken
             (
-                issuer: Configuration["Auth:Jwt:Issuer"],
-                audience: Configuration["Auth:Jwt:Audience"],
+                issuer: this.configuration["Auth:Jwt:Issuer"],
+                audience: this.configuration["Auth:Jwt:Audience"],
                 claims: claims,
                 notBefore: now,
                 expires: now.Add(TimeSpan.FromMinutes(tokenExpirationMins)),
