@@ -5,7 +5,8 @@
 
     using ServiceLayer.Interfaces;
     using System.Threading.Tasks;
-    
+    using VideoChatWebApp.Infrastrucure.Services;
+
     public class TestController : Controller
     {
         private ITokenService tokenService;
@@ -19,6 +20,8 @@
         [Authorize]
         public async Task<IActionResult> Test()
         {
+            var currentlyLoggedInUsers = CurrentlyLoggedInUsersService.GetAllUsernames();
+
             var allTokens = await this.tokenService.GetAllTokens();
 
             return Ok(allTokens);

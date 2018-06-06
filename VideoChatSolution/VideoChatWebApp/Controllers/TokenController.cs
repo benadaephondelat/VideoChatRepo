@@ -14,6 +14,7 @@ using TestMakerFreeWebApp.ViewModels;
 using DAL;
 using Models;
 using ServiceLayer.Interfaces;
+using VideoChatWebApp.Infrastrucure.Services;
 
 namespace TestMakerFreeWebApp.Controllers
 {
@@ -54,6 +55,8 @@ namespace TestMakerFreeWebApp.Controllers
             try
             {
                 Token refreshToken = await this.tokenService.CreateUserRefreshToken(model.username, model.password, model.client_id);
+
+                CurrentlyLoggedInUsersService.AddNewEntry(model.username, refreshToken.UserId);
 
                 TokenResponseViewModel tokenResponse = CreateAccessToken(refreshToken.UserId, refreshToken.Value);
 
