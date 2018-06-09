@@ -6,6 +6,9 @@
     using Models;
     using DAL.Interfaces;
     using ServiceLayer.Interfaces;
+    using Common.CustomExceptions.UserExceptions;
+    using System.Linq;
+    using Common.ValidationConstants;
 
     public class UserService : IUserService
     {
@@ -20,21 +23,11 @@
 
         public async Task<ApplicationUser> RegisterNewUser(string username, string displayName, string email, string password)
         {
-            //TODO Check input params
+            this.ValidateUserPassword(password);
 
             ApplicationUser user = await authManager.FindByNameAsync(username);
 
-            if (user != null)
-            {
-                throw new Exception("Username already exist"); //TODO Throw custom exceptions
-            }
-
-            user = await authManager.FindByEmailAsync(email);
-
-            if (user != null)
-            {
-                throw new Exception("Email already exists."); //TODO Throw custom exceptions
-            }
+            user = await ValidateIfUserAlreadyExists(email, user);
 
             var now = DateTime.Now;
 
@@ -58,6 +51,51 @@
             await context.SaveChangesAsync();
 
             return user;
+        }
+
+        private async Task<ApplicationUser> ValidateIfUserAlreadyExists(string email, ApplicationUser user)
+        {
+            if (user != null && string.IsNullOrWhiteSpace(user.UserName) == false)
+            {
+                throw new UserAlreadyExistsException();
+            }
+
+            user = await authManager.FindByEmailAsync(email);
+
+            if (user != null && string.IsNullOrWhiteSpace(user.Email) == false)
+            {
+                throw new UserAlreadyExistsException();
+            }
+
+            return user;
+        }
+
+        private void ValidateUserPassword(string password)
+        {
+            if (password.Any(c => char.IsDigit(c)) != UserValidationConstants.DoesUserPasswordRequiresDigit)
+            {
+                throw new UserPasswordValidationException();
+            }
+
+            if (password.Any(c => char.IsUpper(c)) != UserValidationConstants.DoesUserPasswordRequiresUppercase)
+            {
+                throw new UserPasswordValidationException(UserValidationConstants.UserPasswordRequiresUpercaseMessage);
+            }
+
+            if (password.Any(c => char.IsLower(c)) != UserValidationConstants.DoesUserPasswordRequiresLowercase)
+            {
+                throw new UserPasswordValidationException();
+            }
+
+            if (password.Any(c => char.IsLetterOrDigit(c)) != UserValidationConstants.DoesUserPasswordRequiresNonAlphanumeric)
+            {
+                throw new UserPasswordValidationException();
+            }
+
+            if (password.Length < UserValidationConstants.UserPasswordLength)
+            {
+                throw new UserPasswordValidationException();
+            }
         }
     }
 }

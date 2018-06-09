@@ -35,6 +35,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Bootstrapper\Bootstrapper.csproj" />
+    <ProjectReference Include="..\Common\Common.csproj" />
     <ProjectReference Include="..\Models\Models.csproj" />
     <ProjectReference Include="..\ServiceLayer.Interfaces\ServiceLayer.Interfaces.csproj" />
   </ItemGroup>

@@ -14,3 +14,7 @@ VideoChatSolution/DAL.Interfaces/bin/
 VideoChatSolution/DAL.Interfaces/obj/
 VideoChatSolution/ServiceLayer.Interfaces/bin/
 VideoChatSolution/ServiceLayer.Interfaces/obj/
+VideoChatSolution/ServiceLayerTests/obj/
+VideoChatSolution/ServiceLayerTests/bin/
+VideoChatSolution/Common/obj/
+VideoChatSolution/Common/bin/

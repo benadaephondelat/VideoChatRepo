@@ -19,6 +19,7 @@
     using ServiceLayer.Interfaces;
     using ServiceLayer;
     using DAL.Interfaces;
+    using Common.ValidationConstants;
 
     public static class Bootstrap
     {
@@ -36,11 +37,11 @@
 
             services.AddIdentity<ApplicationUser, IdentityRole>(opts =>
             {
-                opts.Password.RequireDigit = true;
-                opts.Password.RequireLowercase = true;
-                opts.Password.RequireUppercase = true;
-                opts.Password.RequireNonAlphanumeric = false;
-                opts.Password.RequiredLength = 7;
+                opts.Password.RequireDigit = UserValidationConstants.DoesUserPasswordRequiresDigit;
+                opts.Password.RequireLowercase = UserValidationConstants.DoesUserPasswordRequiresLowercase;
+                opts.Password.RequireUppercase = UserValidationConstants.DoesUserPasswordRequiresUppercase;
+                opts.Password.RequireNonAlphanumeric = UserValidationConstants.DoesUserPasswordRequiresNonAlphanumeric;
+                opts.Password.RequiredLength = UserValidationConstants.UserPasswordLength;
             }).AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
