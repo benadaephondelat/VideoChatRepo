@@ -10,6 +10,8 @@ using DAL;
 using Models;
 using ServiceLayer.Interfaces;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Authorization;
+using VideoChatWebApp.Infrastrucure.Services;
 
 namespace TestMakerFreeWebApp.Controllers
 {
@@ -40,5 +42,18 @@ namespace TestMakerFreeWebApp.Controllers
                 Formatting = Formatting.Indented
             });
         }
+
+        [Route("api/Users/GetUsers")]
+        [HttpGet, Authorize]
+        public IActionResult GetUsers()
+        {
+            var allUsers = CurrentlyLoggedInUsersService.GetAllUsernames();
+
+            return Json(allUsers, new JsonSerializerSettings()
+            {
+                Formatting = Formatting.Indented
+            });
+        }
+        
     }
 }

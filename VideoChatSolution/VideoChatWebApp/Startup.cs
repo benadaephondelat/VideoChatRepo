@@ -9,6 +9,7 @@ namespace VideoChatWebApp
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using VideoChatWebApp.Hubs;
 
     public class Startup
     {
@@ -21,6 +22,13 @@ namespace VideoChatWebApp
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(o => o.AddPolicy("CorsPolicy", builder =>
+            {
+                builder.AllowAnyMethod().AllowAnyHeader().WithOrigins("https://localhost:44319");
+            }));
+
+            services.AddSignalR();
+
             Bootstrap.ConfigureServicesBootstrapper(services, this.Configuration);
 
             services.AddSpaStaticFiles(configuration =>
@@ -31,6 +39,13 @@ namespace VideoChatWebApp
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseCors("CorsPolicy");
+
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<ChatHub>("/chat");
+            });
+
             Bootstrap.ConfigureBoostrapper(app, env);
         }
     }
