@@ -12,6 +12,7 @@ using ServiceLayer.Interfaces;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Authorization;
 using VideoChatWebApp.Infrastrucure.Services;
+using System.Linq;
 
 namespace TestMakerFreeWebApp.Controllers
 {
@@ -47,7 +48,9 @@ namespace TestMakerFreeWebApp.Controllers
         [HttpGet, Authorize]
         public IActionResult GetUsers()
         {
-            var allUsers = CurrentlyLoggedInUsersService.GetAllUsernames();
+            string username = HttpContext.User.Identity.Name;
+
+            var allUsers = CurrentlyLoggedInUsersService.GetAllUsernames().Where(val => val != username).ToList();
 
             return Json(allUsers, new JsonSerializerSettings()
             {

@@ -1,16 +1,13 @@
-
 <div>
+  <h2>Users that are currently in the chat room:</h2>
   <ul>
     <li *ngFor="let user of users">
       {{ user }}
-      <button class="btn btn-md btn-success btn-block btn-signin">
-        Start Chatting
-      </button>
     </li>
   </ul>
 </div>
 
-<div>
+<!--<div>
   <div class="container">
     <h2>Hello {{nick}}!</h2>
     <form (ngSubmit)="sendMessage()" #chatForm="ngForm">
@@ -29,4 +26,4 @@
       <span>{{message}}</span>
     </div>
   </div>
-</div>
+</div>-->

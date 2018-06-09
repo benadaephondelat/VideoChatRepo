@@ -58,7 +58,7 @@ namespace TestMakerFreeWebApp.Controllers
 
                 CurrentlyLoggedInUsersService.AddNewEntry(model.username, refreshToken.UserId);
 
-                TokenResponseViewModel tokenResponse = CreateAccessToken(refreshToken.UserId, refreshToken.Value);
+                TokenResponseViewModel tokenResponse = CreateAccessToken(refreshToken.UserId, refreshToken.Value, model.username);
 
                 return Json(tokenResponse);
             }
@@ -74,7 +74,7 @@ namespace TestMakerFreeWebApp.Controllers
             {
                 Token newRefreshToken = await this.tokenService.ReplaceUserRefreshToken(model.client_id, model.refresh_token);
 
-                var response = CreateAccessToken(newRefreshToken.UserId, newRefreshToken.Value);
+                var response = CreateAccessToken(newRefreshToken.UserId, newRefreshToken.Value, model.username);
 
                 return Json(response);
             }
@@ -84,7 +84,7 @@ namespace TestMakerFreeWebApp.Controllers
             }
         }
 
-        private TokenResponseViewModel CreateAccessToken(string userId, string refreshToken)
+        private TokenResponseViewModel CreateAccessToken(string userId, string refreshToken, string username)
         {
             DateTime now = DateTime.UtcNow;
  
@@ -114,7 +114,8 @@ namespace TestMakerFreeWebApp.Controllers
             {
                 token = encodedToken,
                 expiration = tokenExpirationMins,
-                refresh_token = refreshToken
+                refresh_token = refreshToken,
+                username = username
             };
         }
     }

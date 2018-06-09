@@ -69,9 +69,7 @@ export class AuthService {
 
     setAuth(auth: TokenResponse | null): boolean {
       if (auth) {
-          localStorage.setItem(
-              this.authKey,
-              JSON.stringify(auth));
+        localStorage.setItem(this.authKey, JSON.stringify(auth));
       }
       else {
           localStorage.removeItem(this.authKey);

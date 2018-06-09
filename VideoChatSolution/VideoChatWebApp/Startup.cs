@@ -10,6 +10,7 @@ namespace VideoChatWebApp
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using VideoChatWebApp.Hubs;
+    using VideoChatWebApp.Hubs.Interfaces;
 
     public class Startup
     {
@@ -29,6 +30,8 @@ namespace VideoChatWebApp
 
             services.AddSignalR();
 
+            //services.AddScoped<IHubClient, UsersHub>();
+
             Bootstrap.ConfigureServicesBootstrapper(services, this.Configuration);
 
             services.AddSpaStaticFiles(configuration =>
@@ -44,6 +47,7 @@ namespace VideoChatWebApp
             app.UseSignalR(routes =>
             {
                 routes.MapHub<ChatHub>("/chat");
+                routes.MapHub<UsersHub>("/users");
             });
 
             Bootstrap.ConfigureBoostrapper(app, env);
