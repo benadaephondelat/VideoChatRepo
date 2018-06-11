@@ -14,6 +14,7 @@ import { AuthResponseInterceptor } from './services/auth.response.interceptor';
 import { UsersComponent } from './users/users.component';
 import { RegisterComponent } from './register/register.component';
 import { PrivateChatComponent } from './private-chat/private-chat.component';
+import { VideoComponent } from './video/video.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { PrivateChatComponent } from './private-chat/private-chat.component';
     LoginComponent,
     RegisterComponent,
     UsersComponent,
-    PrivateChatComponent
+    PrivateChatComponent,
+    VideoComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
