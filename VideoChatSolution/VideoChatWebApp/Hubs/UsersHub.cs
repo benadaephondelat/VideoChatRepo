@@ -1,5 +1,6 @@
 ﻿namespace VideoChatWebApp.Hubs
 {
+    using System;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.SignalR;
     using VideoChatWebApp.Hubs.Interfaces;
@@ -19,6 +20,11 @@
         public void RemoveUserFromChatRoom(string username)
         {
             Clients.All.SendAsync("removeUserFromChatRoom", username);
+        }
+
+        public void JoinRoom(string currentUser, string otherUser)
+        {
+            Clients.All.SendAsync("joinRoom", currentUser, otherUser);
         }
     }
 }

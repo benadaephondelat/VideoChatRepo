@@ -48,9 +48,9 @@ namespace TestMakerFreeWebApp.Controllers
         [HttpGet, Authorize]
         public IActionResult GetUsers()
         {
-            string username = HttpContext.User.Identity.Name;
+            //string username = HttpContext.User.Identity.Name;
 
-            var allUsers = CurrentlyLoggedInUsersService.GetAllUsernames().Where(val => val != username).ToList();
+            var allUsers = CurrentlyLoggedInUsersService.GetAllUsernames().ToList();
 
             return Json(allUsers, new JsonSerializerSettings()
             {

@@ -13,6 +13,7 @@ import { AuthInterceptor } from './services/auth.interceptor';
 import { AuthResponseInterceptor } from './services/auth.response.interceptor';
 import { UsersComponent } from './users/users.component';
 import { RegisterComponent } from './register/register.component';
+import { PrivateChatComponent } from './private-chat/private-chat.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { RegisterComponent } from './register/register.component';
     HomeComponent,
     LoginComponent,
     RegisterComponent,
-    UsersComponent
+    UsersComponent,
+    PrivateChatComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -34,6 +36,7 @@ import { RegisterComponent } from './register/register.component';
       { path: 'login', component: LoginComponent },
       { path: 'register', component: RegisterComponent },
       { path: 'users', component: UsersComponent },
+      { path: 'private-chat', data: { user1: '', user2: '' }, component: PrivateChatComponent, pathMatch: 'full' }
     ])
   ],
   providers: [
