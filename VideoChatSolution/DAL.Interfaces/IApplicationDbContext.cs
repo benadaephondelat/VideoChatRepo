@@ -1,10 +1,11 @@
 ﻿namespace DAL.Interfaces
 {
+    using System.Threading;
+    using System.Threading.Tasks;
+
     using Models;
 
     using Microsoft.EntityFrameworkCore;
-    using System.Threading.Tasks;
-    using System.Threading;
 
     public interface IApplicationDbContext
     {

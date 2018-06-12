@@ -16,5 +16,8 @@
 
         public const int UserPasswordLength = 7;
         public const string UserPasswordLengthMessage = "User password must be at least 7 characters long";
+
+        public const string UserWithUsernameDoesNotExists = "There is no user with that username in the database.";
+        public const string UserWithEmailDoesNotExists = "There is no user with that email in the database.";
     }
 }

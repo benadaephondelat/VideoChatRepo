@@ -10,6 +10,7 @@
     using ServiceLayer.Interfaces;
 
     using Microsoft.EntityFrameworkCore;
+    using Common.CustomExceptions.UserExceptions;
 
     public class TokenService : ITokenService
     {
@@ -31,24 +32,22 @@
                 user = await this.authManager.FindByEmailAsync(username);
             }
 
-            if (user == null || await this.authManager.CheckPasswordAsync(user, password) == false)
+            if (user == null)
             {
-                throw new Exception(); //TODO throw custom exception
+                throw new UserNotFoundException();
             }
 
-            var refreshToken = CreateRefreshToken(cliendId, user.Id);
+            if (await this.authManager.CheckPasswordAsync(user, password) == false)
+            {
+                throw new UserPasswordMissmatchException();
+            }
+
+            Token refreshToken = CreateRefreshToken(cliendId, user.Id);
 
             this.context.Tokens.Add(refreshToken);
             await this.context.SaveChangesAsync();
 
             return refreshToken;
-        }
-
-        public async Task<IEnumerable<Token>> GetAllTokens()
-        {
-            var result = await this.context.Tokens.ToListAsync();
-
-            return result;
         }
 
         public async Task<Token> ReplaceUserRefreshToken(string clientId, string currentRefreshToken)

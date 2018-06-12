@@ -1,21 +1,17 @@
 namespace ServiceLayerTests
 {
     using System;
-    using System.Linq;
     using System.Threading.Tasks;
 
     using Models;
     using ServiceLayer;
     using ServiceLayer.Interfaces;
     using DAL.Interfaces;
+    using Common.ValidationConstants;
     using Common.CustomExceptions.UserExceptions;
 
     using Moq;
-    using Microsoft.AspNetCore.Identity;
-    using Microsoft.EntityFrameworkCore;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Common.ValidationConstants;
-    using System.Threading;
 
     [TestClass]
     public class UserServiceTests
