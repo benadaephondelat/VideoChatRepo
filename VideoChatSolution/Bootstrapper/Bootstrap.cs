@@ -40,7 +40,7 @@
                 opts.Password.RequireDigit = UserValidationConstants.DoesUserPasswordRequiresDigit;
                 opts.Password.RequireLowercase = UserValidationConstants.DoesUserPasswordRequiresLowercase;
                 opts.Password.RequireUppercase = UserValidationConstants.DoesUserPasswordRequiresUppercase;
-                opts.Password.RequireNonAlphanumeric = UserValidationConstants.DoesUserPasswordRequiresNonAlphanumeric;
+                opts.Password.RequireNonAlphanumeric = UserValidationConstants.DoesUserPasswordRequiresSymbol;
                 opts.Password.RequiredLength = UserValidationConstants.UserPasswordLength;
             }).AddEntityFrameworkStores<ApplicationDbContext>();
 

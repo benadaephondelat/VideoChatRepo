@@ -15,6 +15,7 @@ namespace ServiceLayerTests
     using Microsoft.EntityFrameworkCore;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Common.ValidationConstants;
+    using System.Threading;
 
     [TestClass]
     public class UserServiceTests
@@ -32,7 +33,7 @@ namespace ServiceLayerTests
 
             try
             {
-                var result = this.userService.RegisterNewUser("Admin", "displayname", "email", "Password123").Result;
+                var result = this.userService.RegisterNewUser("Admin", "displayname", "email", "Password123*").Result;
             }
             catch (AggregateException aggregateException) when (aggregateException.InnerException is UserAlreadyExistsException)
             {
@@ -63,7 +64,7 @@ namespace ServiceLayerTests
 
             try
             {
-                var result = this.userService.RegisterNewUser("unexisting", "displayname", "admin@yahoo.com", "Password123").Result;
+                var result = this.userService.RegisterNewUser("unexisting", "displayname", "admin@yahoo.com", "Password123*").Result;
             }
             catch (AggregateException aggregateException) when (aggregateException.InnerException is UserAlreadyExistsException)
             {
@@ -137,7 +138,7 @@ namespace ServiceLayerTests
 
             try
             {
-                var result = this.userService.RegisterNewUser("does-not-matter", "does-not-matter", "does-not-matter", "password1").Result;
+                var result = this.userService.RegisterNewUser("does-not-matter", "does-not-matter", "does-not-matter", "password1*&").Result;
             }
             catch (AggregateException aggregateException) when (aggregateException.InnerException is UserPasswordValidationException)
             {
@@ -152,7 +153,82 @@ namespace ServiceLayerTests
             Assert.IsTrue(isTestSuccess, "RegisterNewUser did not throw UserPasswordValidationException");
         }
 
+        [TestMethod]
+        public void RegisterNewUser_Should_Throw_Exception_If_The_Password_Does_Not_Meet_DoesUserPasswordRequiresSymbol_Rule()
+        {
+            this.Arrange_Register_New_User_Password_Validation_Mocks();
+
+            bool isTestSuccess = false;
+
+            try
+            {
+                var result = this.userService.RegisterNewUser("does-not-matter", "does-not-matter", "does-not-matter", "password").Result;
+            }
+            catch (AggregateException aggregateException) when (aggregateException.InnerException is UserPasswordValidationException)
+            {
+                if (aggregateException.InnerException.Message == UserValidationConstants.DoesUserPasswordRequiresSymbolMessage)
+                {
+                    isTestSuccess = true;
+                }
+            }
+
+            this.Annihilate();
+
+            Assert.IsTrue(isTestSuccess, "RegisterNewUser did not throw UserPasswordValidationException");
+        }
+
+        [TestMethod]
+        public void RegisterNewUser_Should_Not_Throw_Exception_If_Password_Is_Valid()
+        {
+            this.Arrange_Register_New_User_Password_Validation_Mocks();
+
+            bool isTestSuccess = true;
+
+            try
+            {
+                var result = this.userService.RegisterNewUser("does-not-matter", "does-not-matter", "does-not-matter", "Password123*&").Result;
+            }
+            catch (AggregateException aggregateException) when (aggregateException.InnerException is UserPasswordValidationException)
+            {
+                isTestSuccess = false;
+            }
+
+            this.Annihilate();
+
+            Assert.IsTrue(isTestSuccess, "RegisterNewUser did not throw UserPasswordValidationException");
+        }
+
         private void Arrange_Register_New_User_Password_Validation_Mocks()
+        {
+            this.applicationDbContextMock = new Mock<IApplicationDbContext>();
+            this.authManagerMock = new Mock<IAuthManager>();
+
+            this.userService = new UserService(this.applicationDbContextMock.Object, this.authManagerMock.Object);
+        }
+
+        [TestMethod]
+        public void RegisterNewUser_Should_Return_Application_User()
+        {
+            this.Arrange_Register_New_User_Mocks();
+
+            string username = "newuser";
+            string displayName = "newuser-display";
+            string email = "newuser@yahoo.com";
+            string validPassword = "Password123*&";
+
+            var result = this.userService.RegisterNewUser(username, displayName, email, validPassword).Result;
+
+            this.Annihilate();
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(ApplicationUser));
+
+            Assert.AreEqual(result.UserName, username);
+            Assert.AreEqual(result.DisplayName, displayName);
+            Assert.AreEqual(result.Email, email);
+        }
+
+        private void Arrange_Register_New_User_Mocks()
         {
             this.applicationDbContextMock = new Mock<IApplicationDbContext>();
             this.authManagerMock = new Mock<IAuthManager>();

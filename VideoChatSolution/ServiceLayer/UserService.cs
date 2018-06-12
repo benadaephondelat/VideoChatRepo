@@ -1,13 +1,13 @@
 ﻿namespace ServiceLayer
 {
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
 
     using Models;
     using DAL.Interfaces;
     using ServiceLayer.Interfaces;
     using Common.CustomExceptions.UserExceptions;
-    using System.Linq;
     using Common.ValidationConstants;
 
     public class UserService : IUserService
@@ -29,24 +29,11 @@
 
             user = await ValidateIfUserAlreadyExists(email, user);
 
-            var now = DateTime.Now;
-
-            user = new ApplicationUser()
-            {
-                SecurityStamp = Guid.NewGuid().ToString(),
-                UserName = username,
-                Email = email,
-                DisplayName = displayName,
-                CreatedDate = now,
-                LastModifiedDate = now
-            };
+            user = this.PopulateUserData(username, displayName, email, DateTime.Now);
 
             await authManager.CreateAsync(user, password);
 
             await authManager.AddToRoleAsync(user, "RegisteredUser");
-
-            user.EmailConfirmed = true;
-            user.LockoutEnabled = false;
 
             await context.SaveChangesAsync();
 
@@ -70,11 +57,32 @@
             return user;
         }
 
+        private ApplicationUser PopulateUserData(string username, string displayName, string email, DateTime now)
+        {
+            return new ApplicationUser()
+            {
+                SecurityStamp = Guid.NewGuid().ToString(),
+                UserName = username,
+                Email = email,
+                DisplayName = displayName,
+                CreatedDate = now,
+                LastModifiedDate = now,
+                EmailConfirmed = true,
+                LockoutEnabled = false
+            };
+        }
+
+        //TODO This method is too FRAGILE - refactor it
         private void ValidateUserPassword(string password)
         {
+            if (password.Any(c => !char.IsLetterOrDigit(c)) != UserValidationConstants.DoesUserPasswordRequiresSymbol)
+            {
+                throw new UserPasswordValidationException(UserValidationConstants.DoesUserPasswordRequiresSymbolMessage);
+            }
+
             if (password.Any(c => char.IsDigit(c)) != UserValidationConstants.DoesUserPasswordRequiresDigit)
             {
-                throw new UserPasswordValidationException();
+                throw new UserPasswordValidationException(UserValidationConstants.UserPasswordRequiresDigitMessage);
             }
 
             if (password.Any(c => char.IsUpper(c)) != UserValidationConstants.DoesUserPasswordRequiresUppercase)
@@ -84,17 +92,12 @@
 
             if (password.Any(c => char.IsLower(c)) != UserValidationConstants.DoesUserPasswordRequiresLowercase)
             {
-                throw new UserPasswordValidationException();
-            }
-
-            if (password.Any(c => char.IsLetterOrDigit(c)) != UserValidationConstants.DoesUserPasswordRequiresNonAlphanumeric)
-            {
-                throw new UserPasswordValidationException();
+                throw new UserPasswordValidationException(UserValidationConstants.UserPasswordRequiresLowercaseMessage);
             }
 
             if (password.Length < UserValidationConstants.UserPasswordLength)
             {
-                throw new UserPasswordValidationException();
+                throw new UserPasswordValidationException(UserValidationConstants.UserPasswordLengthMessage);
             }
         }
     }

@@ -11,8 +11,8 @@
         public const bool DoesUserPasswordRequiresUppercase = true;
         public const string UserPasswordRequiresUpercaseMessage = "Password requires at least one upercase character";
 
-        public const bool DoesUserPasswordRequiresNonAlphanumeric = true;
-        public const string UserPasswordRequiresAlphanumericFormat = "Password must contain both characters and digits";
+        public const bool DoesUserPasswordRequiresSymbol = true;
+        public const string DoesUserPasswordRequiresSymbolMessage = "Password must contain a symbol";
 
         public const int UserPasswordLength = 7;
         public const string UserPasswordLengthMessage = "User password must be at least 7 characters long";
