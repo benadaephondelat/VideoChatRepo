@@ -1,5 +1,6 @@
 ﻿namespace ServiceLayer
 {
+    using System.Security.Claims;
     using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Identity;
@@ -46,6 +47,11 @@
         public async Task<ApplicationUser> FindByNameAsync(string username)
         {
             return await this.userManager.FindByNameAsync(username);
+        }
+
+        public async Task<ApplicationUser> GetUserAsync(ClaimsPrincipal claims)
+        {
+            return await this.userManager.GetUserAsync(claims);
         }
     }
 }

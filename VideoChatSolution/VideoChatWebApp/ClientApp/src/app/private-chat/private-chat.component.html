@@ -21,4 +21,24 @@
   </div>
 </div>
 
+<div class="container-fluid">
+
+  <h1>Images</h1>
+
+  <a href="https://localhost:44319/FileClient/Index" target="_blank">Upload Images</a>
+
+  <div class="row" *ngIf="images.length > 0">
+    <img *ngFor="let image of images;"
+         width="150" style="margin-right:5px"
+         [src]="image.imageHeaders + image.imageBinary">
+  </div>
+
+  <input style="display: none"
+         type="file" (change)="onFileChanged($event)"
+         #fileInput>
+  <button (click)="fileInput.click()">Select File</button>
+  <button (click)="onUpload()">Upload!</button>
+
+</div>
+
 <app-video></app-video>

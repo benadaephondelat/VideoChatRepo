@@ -5,6 +5,7 @@
     using Models;
 
     using Microsoft.AspNetCore.Identity;
+    using System.Security.Claims;
 
     public interface IAuthManager
     {
@@ -13,6 +14,8 @@
         Task<ApplicationUser> FindByEmailAsync(string email);
 
         Task<ApplicationUser> FindByNameAsync(string username);
+
+        Task<ApplicationUser> GetUserAsync(ClaimsPrincipal claims);
 
         Task<IdentityResult> CreateAsync(ApplicationUser user, string password);
 
