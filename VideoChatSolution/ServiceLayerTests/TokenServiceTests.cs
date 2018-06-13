@@ -43,7 +43,6 @@
             Assert.IsTrue(isTestSuccess, "CreateUserRefreshToken did not throw UserNotFoundException");
         }
 
-
         [TestMethod]
         public void CreateUserRefreshToken_Should_Throw_UserNotFoundException_If_There_There_Is_No_User_With_Email_In_The_Database()
         {
@@ -168,6 +167,136 @@
             this.tokenService = new TokenService(this.applicationDbContextMock.Object, this.authManagerMock.Object);
         }
 
+        [TestMethod]
+        public void ReplaceUserRefreshToken_Should_Throw_UserTokenNotFoundException_If_There_Is_No_Such_Token_In_The_Database()
+        {
+            Arrange_ReplaceUserRefreshToken_Token_Not_Found_Exception_Mocks();
+
+            bool isTestSuccess = false;
+
+            try
+            {
+                var result = this.tokenService.ReplaceUserRefreshToken("client-id", "token-value").Result;
+            }
+            catch (AggregateException aggregateException) when (aggregateException.InnerException is UserTokenNotFoundException)
+            {
+                isTestSuccess = true;
+            }
+
+            this.Annihilate();
+
+            Assert.IsTrue(isTestSuccess, "ReplaceUserRefreshToken did not throw UserTokenNotFoundException");
+        }
+
+        private void Arrange_ReplaceUserRefreshToken_Token_Not_Found_Exception_Mocks()
+        {
+            this.applicationDbContextMock = new Mock<IApplicationDbContext>();
+
+            DbSet<Token> tokensMock = this.GetQueryableMockDbSet
+            (
+                new Token { Value = "first-token-value", UserId = "user-id" },
+                new Token { Value = "second-token-value", UserId = "second-user-id" }
+            );
+
+            applicationDbContextMock.Setup(prop => prop.Tokens).Returns(tokensMock);
+
+            this.authManagerMock = new Mock<IAuthManager>();
+            this.tokenService = new TokenService(this.applicationDbContextMock.Object, this.authManagerMock.Object);
+        }
+
+        [TestMethod]
+        public void ReplaceUserRefreshToken_Should_Throw_UserNotFoundException_If_TokenUserId_Does_Not_Correspond_To_A_User_In_The_Database()
+        {
+            Arrange_ReplaceUserRefreshToken_Throws_UserNotFoundException_Mocks();
+
+            bool isTestSuccess = false;
+
+            try
+            {
+                var result = this.tokenService.ReplaceUserRefreshToken("client-id", "first-token-value").Result;
+            }
+            catch (AggregateException aggregateException) when (aggregateException.InnerException is UserNotFoundException)
+            {
+                isTestSuccess = true;
+            }
+
+            this.Annihilate();
+
+            Assert.IsTrue(isTestSuccess, "ReplaceUserRefreshToken did not throw UserNotFoundException");
+        }
+
+        private void Arrange_ReplaceUserRefreshToken_Throws_UserNotFoundException_Mocks()
+        {
+            this.applicationDbContextMock = new Mock<IApplicationDbContext>();
+
+            DbSet<Token> tokensMock = this.GetQueryableMockDbSet
+            (
+                new Token { Value = "first-token-value", UserId = "user-id", ClientId = "client-id" },
+                new Token { Value = "second-token-value", UserId = "second-user-id", ClientId = "second-client-id" }
+            );
+
+            applicationDbContextMock.Setup(prop => prop.Tokens).Returns(tokensMock);
+
+            this.authManagerMock = new Mock<IAuthManager>();
+            this.tokenService = new TokenService(this.applicationDbContextMock.Object, this.authManagerMock.Object);
+        }
+
+        [TestMethod]
+        public void ReplaceUserRefreshToken_Should_Return_Valid_Token()
+        {
+            Arrange_ReplaceUserRefreshToken_Returns_Valid_Token();
+
+            var result = this.tokenService.ReplaceUserRefreshToken("client-id", "first-token-value").Result;
+
+            this.Annihilate();
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(Token));
+
+            Assert.AreEqual("user-id", result.UserId);
+            Assert.AreEqual("client-id", result.ClientId);
+            Assert.AreEqual(DateTime.Now.Date, result.CreatedDate.Date);
+            Assert.AreNotEqual("first-token-value", result.Value);
+        }
+
+        private void Arrange_ReplaceUserRefreshToken_Returns_Valid_Token()
+        {
+            this.applicationDbContextMock = new Mock<IApplicationDbContext>();
+
+            DbSet<Token> tokensMock = this.GetQueryableMockDbSet
+            (
+                new Token { Value = "first-token-value", UserId = "user-id", ClientId = "client-id" },
+                new Token { Value = "second-token-value", UserId = "second-user-id", ClientId = "second-client-id" }
+            );
+
+            this.applicationDbContextMock.Setup(prop => prop.Tokens).Returns(tokensMock);
+
+            this.authManagerMock = new Mock<IAuthManager>();
+            this.authManagerMock.Setup(prop => prop.FindByIdAsync(It.IsAny<string>())).Returns(Task.FromResult(User()));
+
+            this.tokenService = new TokenService(this.applicationDbContextMock.Object, this.authManagerMock.Object);
+        }
+
+        [TestMethod]
+        [Ignore]
+        public void ReplaceUserRefreshToken_Should_Call_Add_and_Remove_On_Tokens_DbSet_Once()
+        {
+
+        }
+
+        private DbSet<T> GetQueryableMockDbSet<T>(params T[] sourceList) where T : class
+        {
+            var queryable = sourceList.AsQueryable();
+
+            var dbSet = new Mock<DbSet<T>>();
+            dbSet.As<IQueryable<T>>().Setup(m => m.Provider).Returns(queryable.Provider);
+            dbSet.As<IQueryable<T>>().Setup(m => m.Expression).Returns(queryable.Expression);
+            dbSet.As<IQueryable<T>>().Setup(m => m.ElementType).Returns(queryable.ElementType);
+            dbSet.As<IQueryable<T>>().Setup(m => m.GetEnumerator()).Returns(() => queryable.GetEnumerator());
+
+            return dbSet.Object;
+        }
+
         private ApplicationUser User()
         {
             ApplicationUser user = new ApplicationUser();
@@ -181,6 +310,11 @@
         }
 
         private ApplicationUser NullUser()
+        {
+            return null;
+        }
+
+        private Token NullToken()
         {
             return null;
         }

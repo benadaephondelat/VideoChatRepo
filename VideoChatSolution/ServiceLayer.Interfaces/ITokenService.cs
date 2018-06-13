@@ -19,6 +19,14 @@
         /// <returns>Task<Token></Token></returns>
         Task<Token> CreateUserRefreshToken(string username, string password, string cliendId);
 
+        /// <summary>
+        /// Replaces a user's token or throws an exception
+        /// </summary>
+        /// <param name="clientId">clientId</param>
+        /// <param name="currentRefreshToken">currentRefreshToken</param>
+        /// <exception cref="UserTokenNotFoundException"></exception>
+        /// <exception cref="UserNotFoundException"></exception>
+        /// <returns>Task<Token></Token></returns>
         Task<Token> ReplaceUserRefreshToken(string clientId, string currentRefreshToken);
     }
 }

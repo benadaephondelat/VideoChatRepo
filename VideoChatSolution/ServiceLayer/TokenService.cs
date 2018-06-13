@@ -2,14 +2,11 @@
 {
     using System;
     using System.Linq;
-    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     using Models;
     using DAL.Interfaces;
     using ServiceLayer.Interfaces;
-
-    using Microsoft.EntityFrameworkCore;
     using Common.CustomExceptions.UserExceptions;
 
     public class TokenService : ITokenService
@@ -56,14 +53,14 @@
 
             if (refreshToken == null)
             {
-                throw new Exception(); //TODO throw custom exception
+                throw new UserTokenNotFoundException();
             }
 
             var user = await this.authManager.FindByIdAsync(refreshToken.UserId);
 
             if (user == null)
             {
-                throw new Exception(); //TODO throw custom exception
+                throw new UserNotFoundException();
             }
 
             Token newRefreshToken = CreateRefreshToken(refreshToken.ClientId, refreshToken.UserId);
