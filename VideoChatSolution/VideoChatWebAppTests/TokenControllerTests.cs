@@ -139,11 +139,9 @@
 
             IActionResult result = await this.tokenController.Auth(this.CreateTokenRequestModelWithPasswordGrantType());
 
-            this.Annihilate();
-
             int count = CurrentlyLoggedInUsersSingleton.GetAllUsernames().Count();
 
-            CurrentlyLoggedInUsersSingleton.RemoveEntryByKey("username");
+            this.Annihilate();
 
             Assert.Equal(1, count);
         }
@@ -165,9 +163,9 @@
 
             IActionResult result = await this.tokenController.Auth(model);
 
-            this.Annihilate();
-
             int keysCount = CurrentlyLoggedInUsersSingleton.GetAllUsernames().Count();
+
+            this.Annihilate();
 
             Assert.Equal(0, keysCount);
         }
@@ -261,6 +259,13 @@
             this.configurationMock = null;
             this.configuration = null;
             this.tokenServiceMock = null;
+
+            var allUsernames = CurrentlyLoggedInUsersSingleton.GetAllUsernames();
+
+            foreach (var username in allUsernames)
+            {
+                CurrentlyLoggedInUsersSingleton.RemoveEntryByKey(username);
+            }
         }
     }
 }
