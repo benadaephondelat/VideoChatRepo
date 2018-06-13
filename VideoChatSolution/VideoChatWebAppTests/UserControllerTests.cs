@@ -76,7 +76,7 @@ namespace VideoChatWebAppTests
 
             this.Annihilate();
 
-            var badRequest = result.Should().BeOfType<ConflictResult>();
+            var conflictResult = result.Should().BeOfType<ConflictResult>();
         }
 
         [Fact]
@@ -94,7 +94,7 @@ namespace VideoChatWebAppTests
 
             this.Annihilate();
 
-            var badRequest = result.Should().BeOfType<ConflictResult>();
+            var conflictResult = result.Should().BeOfType<ConflictResult>();
         }
 
         [Fact]

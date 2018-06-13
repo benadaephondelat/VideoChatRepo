@@ -30,9 +30,9 @@ namespace TestMakerFreeWebApp.Controllers
         [HttpPost("Auth")]
         public async Task<IActionResult> Auth([FromBody]TokenRequestViewModel model)
         {
-            if (model == null) //TODO Replace with filter
+            if (model == null) // TODO replace with modelstate check action filter
             {
-                return new StatusCodeResult(500);
+                return BadRequest();
             }
 
             if (model.grant_type == "password")
