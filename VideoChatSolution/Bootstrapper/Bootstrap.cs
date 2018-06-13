@@ -5,6 +5,10 @@
 
     using DAL;
     using Models;
+    using ServiceLayer.Interfaces;
+    using ServiceLayer;
+    using DAL.Interfaces;
+    using Common.ValidationConstants;
 
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Builder;
@@ -16,10 +20,6 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.IdentityModel.Tokens;
-    using ServiceLayer.Interfaces;
-    using ServiceLayer;
-    using DAL.Interfaces;
-    using Common.ValidationConstants;
 
     public static class Bootstrap
     {

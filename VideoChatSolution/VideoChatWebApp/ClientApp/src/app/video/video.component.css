@@ -1,0 +1,9 @@
+#localVideo {
+  width: 50%;
+  float:left;
+}
+
+#remotesVideos {
+  width: 50%;
+  float: right;
+}

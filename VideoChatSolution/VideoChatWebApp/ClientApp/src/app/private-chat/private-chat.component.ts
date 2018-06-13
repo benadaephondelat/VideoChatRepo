@@ -45,10 +45,9 @@ export class PrivateChatComponent implements OnInit {
   
     this.hubConnection = new HubConnectionBuilder().withUrl('/chat').build();
 
-    this.hubConnection
-      .start()
-      .then(() => console.log('Connection started!'))
-      .catch(err => console.log('Error while establishing connection :('));
+    this.hubConnection.start()
+                      .then(() => console.log('Connection started!'))
+                      .catch(err => console.log('Error while establishing connection :('));
 
     this.hubConnection.on('sendToAll', (nick: string, receivedMessage: string) => {
       const text = `${nick}: ${receivedMessage}`;
@@ -63,8 +62,7 @@ export class PrivateChatComponent implements OnInit {
   }
 
   public sendMessage(): void {
-    this.hubConnection
-      .invoke('sendToAll', this.nick, this.message)
-      .catch(err => console.error(err));
+    this.hubConnection.invoke('sendToAll', this.nick, this.message)
+                      .catch(err => console.error(err));
   }
 }

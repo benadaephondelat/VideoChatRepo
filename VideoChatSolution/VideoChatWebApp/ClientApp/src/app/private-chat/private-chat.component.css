@@ -1,0 +1,20 @@
+#videoContainer {
+  float: left;
+  width: 100%;
+}
+
+#chat-container {
+  float: left;
+  clear: both;
+  width: 48%;
+}
+
+#images-container {
+  float: right;
+  clear: both;
+  width: 48%;
+}
+
+video {
+  height: 368px;
+}
