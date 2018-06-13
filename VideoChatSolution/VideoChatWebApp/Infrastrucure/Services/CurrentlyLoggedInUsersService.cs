@@ -1,32 +1,30 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace VideoChatWebApp.Infrastrucure.Services
+﻿namespace VideoChatWebApp.Infrastrucure.Services
 {
+    using System.Collections.Concurrent;
+    using System.Collections.Generic;
+    using System.Linq;
+
     /// <summary>
     /// Thread safe singleton
     /// <see cref="http://csharpindepth.com/Articles/General/Singleton.aspx"/>
     /// </summary>
-    public sealed class CurrentlyLoggedInUsersService
+    public sealed class CurrentlyLoggedInUsersSingleton
     {
-        private static readonly CurrentlyLoggedInUsersService instance = new CurrentlyLoggedInUsersService();
+        private static readonly CurrentlyLoggedInUsersSingleton instance = new CurrentlyLoggedInUsersSingleton();
 
         private static ConcurrentDictionary<string, string> dictionary;
 
-        static CurrentlyLoggedInUsersService()
+        static CurrentlyLoggedInUsersSingleton()
         {
             
         }
 
-        private CurrentlyLoggedInUsersService()
+        private CurrentlyLoggedInUsersSingleton()
         {
             dictionary = new ConcurrentDictionary<string, string>();
         }
 
-        public static CurrentlyLoggedInUsersService Instance
+        public static CurrentlyLoggedInUsersSingleton Instance
         {
             get
             {

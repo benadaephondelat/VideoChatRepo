@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,8 +12,6 @@ using Common.CustomExceptions;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
 
 namespace TestMakerFreeWebApp.Controllers
 {
@@ -55,15 +52,16 @@ namespace TestMakerFreeWebApp.Controllers
             return Json(viewModel, jsonSettings);
         }
 
+        [Authorize]
         [Route("api/User/GetUsers")]
         [HttpGet, Authorize]
         public async Task<IActionResult> GetUsers()
         {
             var currentUser = await this.authManager.GetUserAsync(HttpContext.User);
 
-            var allUsers = CurrentlyLoggedInUsersService.GetAllUsernames()
-                                                        .Where(v => string.Equals(v, currentUser.UserName, StringComparison.OrdinalIgnoreCase) == false)
-                                                        .ToList();
+            var allUsers = CurrentlyLoggedInUsersSingleton.GetAllUsernames()
+                                                          .Where(v => string.Equals(v, currentUser.UserName, StringComparison.OrdinalIgnoreCase) == false)
+                                                          .ToList();
 
             return Json(allUsers, jsonSettings);
         }

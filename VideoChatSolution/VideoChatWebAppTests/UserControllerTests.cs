@@ -102,8 +102,8 @@ namespace VideoChatWebAppTests
         {
             this.Arrange();
 
-            CurrentlyLoggedInUsersService.AddNewEntry("user", "user-id");
-            CurrentlyLoggedInUsersService.AddNewEntry("second-user", "second-user-id");
+            CurrentlyLoggedInUsersSingleton.AddNewEntry("user", "user-id");
+            CurrentlyLoggedInUsersSingleton.AddNewEntry("second-user", "second-user-id");
 
             var result = await this.userController.GetUsers();
 
@@ -117,8 +117,8 @@ namespace VideoChatWebAppTests
         {
             this.Arrange();
 
-            CurrentlyLoggedInUsersService.AddNewEntry("username", "user-id");
-            CurrentlyLoggedInUsersService.AddNewEntry("second-user", "second-user-id");
+            CurrentlyLoggedInUsersSingleton.AddNewEntry("username", "user-id");
+            CurrentlyLoggedInUsersSingleton.AddNewEntry("second-user", "second-user-id");
 
             var actionResult = await this.userController.GetUsers();
 

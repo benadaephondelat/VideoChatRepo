@@ -1,20 +1,17 @@
 ﻿using System;
 using System.Text;
-using System.Linq;
 using System.Threading.Tasks;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-
-using TestMakerFreeWebApp.ViewModels;
-using DAL;
 using Models;
 using ServiceLayer.Interfaces;
+using TestMakerFreeWebApp.ViewModels;
 using VideoChatWebApp.Infrastrucure.Services;
+
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 
 namespace TestMakerFreeWebApp.Controllers
 {
@@ -56,7 +53,7 @@ namespace TestMakerFreeWebApp.Controllers
             {
                 Token refreshToken = await this.tokenService.CreateUserRefreshToken(model.username, model.password, model.client_id);
 
-                CurrentlyLoggedInUsersService.AddNewEntry(model.username, refreshToken.UserId);
+                CurrentlyLoggedInUsersSingleton.AddNewEntry(model.username, refreshToken.UserId);
 
                 TokenResponseViewModel tokenResponse = CreateAccessToken(refreshToken.UserId, refreshToken.Value, model.username);
 

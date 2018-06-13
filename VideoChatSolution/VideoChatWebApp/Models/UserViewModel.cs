@@ -1,7 +1,7 @@
-﻿using Newtonsoft.Json;
-
-namespace TestMakerFreeWebApp.ViewModels
+﻿namespace TestMakerFreeWebApp.ViewModels
 {
+    using Newtonsoft.Json;
+
     [JsonObject(MemberSerialization.OptOut)]
     public class UserViewModel
     {

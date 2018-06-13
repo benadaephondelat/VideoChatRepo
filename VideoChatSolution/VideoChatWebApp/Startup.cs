@@ -1,16 +1,12 @@
 namespace VideoChatWebApp
 {
-    using System;
-    using System.Text;
-
     using Bootstrapper;
+    using VideoChatWebApp.Hubs;
 
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
-    using VideoChatWebApp.Hubs;
-    using VideoChatWebApp.Hubs.Interfaces;
 
     public class Startup
     {
@@ -29,8 +25,6 @@ namespace VideoChatWebApp
             }));
 
             services.AddSignalR();
-
-            //services.AddScoped<IHubClient, UsersHub>();
 
             Bootstrap.ConfigureServicesBootstrapper(services, this.Configuration);
 

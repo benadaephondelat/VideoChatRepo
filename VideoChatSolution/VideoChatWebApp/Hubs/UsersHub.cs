@@ -1,9 +1,6 @@
 ﻿namespace VideoChatWebApp.Hubs
 {
-    using System;
-    using System.Threading.Tasks;
     using Microsoft.AspNetCore.SignalR;
-    using VideoChatWebApp.Hubs.Interfaces;
 
     public class UsersHub : Hub
     {
