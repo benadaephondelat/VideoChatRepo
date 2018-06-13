@@ -46,7 +46,7 @@ export class UsersComponent implements OnInit, OnDestroy {
 
     this.currentUser = JSON.parse(localStorage.getItem('auth'))['username'].toString();
 
-    this.http.get("api/Users/GetUsers").subscribe((data: any) => {
+    this.http.get("api/User/GetUsers").subscribe((data: any) => {
       this.users = data;
     });
 

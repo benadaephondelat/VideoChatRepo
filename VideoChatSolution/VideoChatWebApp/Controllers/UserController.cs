@@ -20,11 +20,14 @@ namespace TestMakerFreeWebApp.Controllers
 {
     public class UserController : Controller
     {
-        private IUserService userService;
+        private readonly IUserService userService;
+        private readonly IAuthManager authManager;
+        private readonly JsonSerializerSettings jsonSettings = new JsonSerializerSettings() { Formatting = Formatting.Indented };
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, IAuthManager authManager)
         {
             this.userService = userService;
+            this.authManager = authManager;
         }
 
         [Route("api/User/Add")]
@@ -49,30 +52,30 @@ namespace TestMakerFreeWebApp.Controllers
 
             UserViewModel viewModel = this.CreateUserViewModel(user);
 
-            return Json(viewModel, new JsonSerializerSettings()
-            {
-                Formatting = Formatting.Indented
-            });
+            return Json(viewModel, jsonSettings);
         }
 
-        [Route("api/Users/GetUsers")]
+        [Route("api/User/GetUsers")]
         [HttpGet, Authorize]
-        public IActionResult GetUsers()
+        public async Task<IActionResult> GetUsers()
         {
-            var allUsers = CurrentlyLoggedInUsersService.GetAllUsernames().ToList();
+            var currentUser = await this.authManager.GetUserAsync(HttpContext.User);
 
-            return Json(allUsers, new JsonSerializerSettings()
-            {
-                Formatting = Formatting.Indented
-            });
+            var allUsers = CurrentlyLoggedInUsersService.GetAllUsernames()
+                                                        .Where(v => string.Equals(v, currentUser.UserName, StringComparison.OrdinalIgnoreCase) == false)
+                                                        .ToList();
+
+            return Json(allUsers, jsonSettings);
         }
 
         private UserViewModel CreateUserViewModel(ApplicationUser user)
         {
             UserViewModel viewModel = new UserViewModel();
+
             viewModel.DisplayName = user.DisplayName;
             viewModel.Email = user.Email;
             viewModel.UserName = user.Email;
+
             return viewModel;
         }
     }
