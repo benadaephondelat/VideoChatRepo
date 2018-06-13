@@ -8,6 +8,8 @@ using Models;
 using ServiceLayer.Interfaces;
 using TestMakerFreeWebApp.ViewModels;
 using VideoChatWebApp.Infrastrucure.Services;
+using Common.CustomExceptions;
+using Common.CustomExceptions.UserExceptions;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -37,7 +39,7 @@ namespace TestMakerFreeWebApp.Controllers
 
             if (model.grant_type == "password")
             {
-                 return await GetToken(model);
+                return await GetToken(model);
             }
             else if (model.grant_type == "refresh_token")
             {
@@ -55,11 +57,11 @@ namespace TestMakerFreeWebApp.Controllers
 
                 CurrentlyLoggedInUsersSingleton.AddNewEntry(model.username, refreshToken.UserId);
 
-                TokenResponseViewModel tokenResponse = CreateAccessToken(refreshToken.UserId, refreshToken.Value, model.username);
+                TokenResponseViewModel tokenResponse = this.CreateAccessToken(refreshToken.UserId, refreshToken.Value, model.username);
 
                 return Json(tokenResponse);
             }
-            catch (Exception)
+            catch (VideoChatWebAppMainException e) when (e is UserNotFoundException || e is UserPasswordMissmatchException)
             {
                 return new UnauthorizedResult();
             }
@@ -75,7 +77,7 @@ namespace TestMakerFreeWebApp.Controllers
 
                 return Json(response);
             }
-            catch (Exception)
+            catch (VideoChatWebAppMainException e) when (e is UserNotFoundException || e is UserTokenNotFoundException)
             {
                 return new UnauthorizedResult();
             }
