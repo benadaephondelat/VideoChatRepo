@@ -29,9 +29,19 @@ namespace VideoChatWebApp.Controllers
         [HttpPost("content/upload-image")]
         public async Task<IActionResult> UploadFiles(IFormFile file)
         {
-            var user = await this.authManager.GetUserAsync(HttpContext.User);
+            IFormFile fileFromRequest = null;
 
-            IFormFile fileFromRequest = HttpContext.Request.Form.Files[0];
+            if (file == null)
+            {
+                fileFromRequest = HttpContext?.Request?.Form?.Files?[0] ?? null;
+            }
+
+            if (file == null && fileFromRequest == null)
+            {
+                return BadRequest();
+            }
+
+            var user = await this.authManager.GetUserAsync(HttpContext.User);
 
             using (var memoryStream = new MemoryStream())
             {
@@ -43,7 +53,10 @@ namespace VideoChatWebApp.Controllers
                     ImageBinary = memoryStream.ToArray()
                 };
 
-                await hubContext.Clients.All.SendAsync("imageMessage", user.UserName, imageMessage);
+                if (hubContext.Clients != null) //TODO - Remove this ugly hack when FileUploadControllerTests is mocking the SignalR ChatHub.cs
+                {
+                    await hubContext.Clients?.All?.SendAsync("imageMessage", user.UserName, imageMessage);
+                }
             }
 
             return Ok();
