@@ -46,7 +46,7 @@
 
             if (await userManager.FindByNameAsync(user_Admin.UserName) == null)
             {
-                await userManager.CreateAsync(user_Admin, "Password123");
+                await userManager.CreateAsync(user_Admin, "Password123*&");
                 await userManager.AddToRoleAsync(user_Admin, role_RegisteredUser);
                 await userManager.AddToRoleAsync(user_Admin, role_Administrator);
 
