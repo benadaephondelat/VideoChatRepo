@@ -32,7 +32,6 @@
 
   <ItemGroup>
     <None Remove="ClientApp\src\app\interfaces\imagemessage.ts" />
-    <None Remove="ClientApp\src\app\interfaces\UsersHubMethodNames.ts" />
     <None Remove="ClientApp\src\app\services\token.response.ts" />
   </ItemGroup>
 
@@ -44,9 +43,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <TypeScriptCompile Include="ClientApp\src\app\interfaces\imagemessage.ts" />
-    <TypeScriptCompile Include="ClientApp\src\app\interfaces\usersHubMethodNames.ts" />
-    <TypeScriptCompile Include="ClientApp\src\app\services\token.response.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\models\imagemessage.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\interfaces\token.response.ts" />
   </ItemGroup>
 
   <ItemGroup>

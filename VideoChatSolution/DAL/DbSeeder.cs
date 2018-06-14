@@ -41,7 +41,6 @@
                 Email = "admin@yahoo.com",
                 CreatedDate = createdDate,
                 LastModifiedDate = lastModifiedDate,
-
             };
 
             if (await userManager.FindByNameAsync(user_Admin.UserName) == null)
@@ -49,6 +48,25 @@
                 await userManager.CreateAsync(user_Admin, "Password123*&");
                 await userManager.AddToRoleAsync(user_Admin, role_RegisteredUser);
                 await userManager.AddToRoleAsync(user_Admin, role_Administrator);
+
+                user_Admin.EmailConfirmed = true;
+                user_Admin.LockoutEnabled = false;
+            }
+
+            var user_User = new ApplicationUser()
+            {
+                SecurityStamp = Guid.NewGuid().ToString(),
+                UserName = "User",
+                Email = "user@yahoo.com",
+                CreatedDate = createdDate,
+                LastModifiedDate = lastModifiedDate,
+            };
+
+            if (await userManager.FindByNameAsync(user_User.UserName) == null)
+            {
+                await userManager.CreateAsync(user_User, "Password123*&");
+                await userManager.AddToRoleAsync(user_User, role_RegisteredUser);
+                await userManager.AddToRoleAsync(user_User, role_Administrator);
 
                 user_Admin.EmailConfirmed = true;
                 user_Admin.LockoutEnabled = false;

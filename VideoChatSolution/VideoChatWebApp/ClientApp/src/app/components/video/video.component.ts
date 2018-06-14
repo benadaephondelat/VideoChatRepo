@@ -1,5 +1,5 @@
 import { Component, AfterViewInit } from '@angular/core';
-import * as WebRTC from '../../assets/webrtc.js';
+import * as WebRTC from '../../../assets/webrtc.js';
 
 @Component({
   selector: 'app-video',

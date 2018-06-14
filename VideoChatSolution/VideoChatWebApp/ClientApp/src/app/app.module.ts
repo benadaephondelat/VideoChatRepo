@@ -5,16 +5,16 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
-import { NavMenuComponent } from './nav-menu/nav-menu.component';
-import { HomeComponent } from './home/home.component';
-import { LoginComponent } from './login/login.component';
 import { AuthService } from './services/auth.service';
 import { AuthInterceptor } from './services/auth.interceptor';
 import { AuthResponseInterceptor } from './services/auth.response.interceptor';
-import { UsersComponent } from './users/users.component';
-import { RegisterComponent } from './register/register.component';
-import { PrivateChatComponent } from './private-chat/private-chat.component';
-import { VideoComponent } from './video/video.component';
+import { NavMenuComponent } from './components/nav-menu/nav-menu.component';
+import { HomeComponent } from './components/home/home.component';
+import { LoginComponent } from './components/login/login.component';
+import { RegisterComponent } from './components/register/register.component';
+import { UsersComponent } from './components/users/users.component';
+import { PrivateChatComponent } from './components/private-chat/private-chat.component';
+import { VideoComponent } from './components/video/video.component';
 
 @NgModule({
   declarations: [

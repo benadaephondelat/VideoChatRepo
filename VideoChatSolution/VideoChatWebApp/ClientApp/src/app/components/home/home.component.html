@@ -1,0 +1,66 @@
+<h3>Implemented Features</h3>
+
+<ul>
+  <li>
+    <strong>Successful Login </strong>
+    <span>TODO: Handle unsuccessful login attempt on the angular's side</span>
+  </li>
+  <li>
+    <strong>Successful Registration</strong>
+    <span>TODO: Handle unsuccessful registration attempt on the angular's side</span>
+    <span>NOTE: Password requires - uppercase, lowercase, digit and a symbol. You can use the following users:</span>
+    <span>
+      User: Admin
+      Pass: Password123*&
+    </span>
+    <span>
+      User: User
+      Pass: Password123*&
+    </span>
+  </li>
+  <li>
+    <strong>Logout</strong>
+    <span>TODO: Buggy when you are on the private-chat or the user's page also when logging out the connection to the signal r should be closed</span>
+  </li>
+  <li>
+    <strong>Users page that shows currently logged in users when you first open the page</strong>
+    <span>When you are at that page if another user IS ON the page it's ADDED to the users list</span>
+    <span>When you are at that page if another user LEAVES the page it's REMOVED to the users list</span>
+    <span>Start chat button that takes the users to a private-chat component that initiates the audio/video, text and image sending functionality</span>
+    <span>TODO: Make it so that the page only shows the users that are currently on that page on the first load</span>
+  </li>
+  <li>
+    <strong>Chat page</strong>
+    <span>Audio/Video, Text and Image sending functionality</span>
+    <span>TODO: Make it pretty</span>
+    <span>TODO: Add options to the video like - mute audio, pause video etc...</span>
+  </li>
+
+  <li>
+    <strong>Token based authentification using JWT refresh tokens approach</strong>
+  </li>
+
+  <li>Sometimes there are other people in the chat since I am using a free server provided by the SimpleWebRtc library :)</li>
+</ul>
+
+<h3>Technologies used</h3>
+
+<ul>
+  <li>.NET Core 2.1</li>
+  <li>Signal R Core</li>
+  <li>SQL 2017</li>
+  <li>Angular 6</li>
+  <li>SimpleWebRTC library</li>
+</ul>
+
+<h3>Tech TODO's</h3>
+<ul>
+  <li>Improve Angular6 implementation: especially the communication between the modules and write tests</li>
+  <li>Signalr R - use groups, because currently when someone is sending a text or an image both are send to all connected clients</li>
+  <li>.NET Core: - use Filters to improve the app and improve the testing</li>
+</ul>
+
+<h3>
+  The app should start on port: 44319
+  If by some chance the app does not start on this port please do a simple find and replace of that value by searching in .cs and .ts file extentions
+</h3>

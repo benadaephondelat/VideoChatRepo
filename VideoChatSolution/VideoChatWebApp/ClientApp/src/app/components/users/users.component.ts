@@ -2,7 +2,6 @@ import { Component, Inject, OnInit, Output, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
 import { HttpClient } from "@angular/common/http";
 import { HubConnection, HubConnectionBuilder } from '@aspnet/signalr';
-import { MethodNames } from '../interfaces/usersHubMethodNames';
 
 @Component({
     selector: "users",
@@ -11,13 +10,56 @@ import { MethodNames } from '../interfaces/usersHubMethodNames';
 })
 
 export class UsersComponent implements OnInit, OnDestroy {
+  public hubConnection: HubConnection;
+  private users: string[];
+  private currentUser: string;
+
   constructor(private http: HttpClient, private router: Router) {
     this.users = new Array<string>();
   }
 
-  public hubConnection: HubConnection;
-  private users: string[];
-  private currentUser: string;
+  ngOnInit(): void {
+    if (this.users == null) {
+      this.users = new Array<string>();
+    }
+
+    this.currentUser = JSON.parse(localStorage.getItem('auth'))['username'].toString();
+
+    this.http.get("api/User/GetUsers").subscribe((data: any) => {
+      this.users = data;
+    });
+
+    this.hubConnection = new HubConnectionBuilder().withUrl('/users').build();
+
+    this.hubConnection.start().then(() => {
+      this.hubConnection.on('addUserToChatRoom', (user: string) => {
+        this.addUserToChatRoom(user);
+      });
+
+      this.hubConnection.on('removeUserFromChatRoom', (user: string) => {
+        this.removeUserFromChatRoom(user);
+      });
+
+      this.hubConnection.on('joinRoom', (currentUser: string, otherUser: string) => {
+        this.joinRoom(currentUser, otherUser);
+      });
+
+      this.hubConnection.invoke('addUserToChatRoom', this.currentUser);
+
+    }).catch(err => console.log('Error while establishing connection :('));
+  }
+
+  ngOnDestroy(): void {
+    var authkey = localStorage.getItem('auth');
+
+    if (typeof authkey !== 'undefined') {
+      let username = JSON.parse(authkey)['username'].toString();
+
+      this.hubConnection.invoke('removeUserFromChatRoom', username);
+    }
+
+    this.hubConnection.stop();
+  }
 
   public startChat(username: string) {
     if (username == this.currentUser) {
@@ -35,51 +77,6 @@ export class UsersComponent implements OnInit, OnDestroy {
         user2: currentUserUsername
       }]);
     }
-  }
-
-
-
-  ngOnInit(): void {
-    if (this.users == null) {
-      this.users = new Array<string>();
-    }
-
-    this.currentUser = JSON.parse(localStorage.getItem('auth'))['username'].toString();
-
-    this.http.get("api/User/GetUsers").subscribe((data: any) => {
-      this.users = data;
-    });
-
-    this.hubConnection = new HubConnectionBuilder().withUrl('/users').build();
-
-    this.hubConnection.start().then(() => {
-        this.hubConnection.on('addUserToChatRoom', (user: string) => {
-          this.addUserToChatRoom(user);
-        });
-
-        this.hubConnection.on('removeUserFromChatRoom', (user: string) => {
-          this.removeUserFromChatRoom(user);
-        });
-  
-        this.hubConnection.on('joinRoom', (currentUser: string, otherUser: string) => {
-          this.joinRoom(currentUser, otherUser);
-        });
-
-        this.hubConnection.invoke('addUserToChatRoom', this.currentUser);
-
-      }).catch(err => console.log('Error while establishing connection :('));
-  }
-
-  ngOnDestroy(): void {
-    var authkey = localStorage.getItem('auth');
-
-    if (typeof authkey !== 'undefined') {
-      let username = JSON.parse(authkey)['username'].toString();
-
-      this.hubConnection.invoke('removeUserFromChatRoom', username);
-    }
-
-    this.hubConnection.stop();
   }
 
   public addUserToChatRoom(username: string): void {
